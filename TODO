@@ -1,0 +1,227 @@
+19/02/2007
+- FATTO misura braccio Human lunghezza in direzione Y 21cm, in direzione X 25cm
+- mettere gli sticks al modello del braccio destro di nais
+- costruire delle prove per vedere di quanto sbaglia Human
+- capire come modellare Human per il retargetting (vedere gleicher)
+- usare Matlab per ottimizzare il movimento corretto (toolbox optim)
+- convertire i valori dei potenziometri in angoli->ottimizzare->ricorventire in valori dei potenziometri->far eseguire da Human
+- fare 
+14/02/2007
+- fare modello di mocap e di braccio:
+      - 1 pallino per ogni potenziometro e corrispondente centro di rotazione
+      - determinare rotazione del potenziometro e quindi del centro di rotazione
+
+09/02/2007
+- FATTO fare piccola utility per tagliare parti di file mcd....un prog che prende in input frame iniziale fi e frame finale ff e taglia i frame tc fi<=f<=fn e lo scrive in un file di output
+      - parametri di input:
+          - file da cui partire (-i)
+          - frame iniziale (-fA)
+          - frame output (-fB)
+          - file di output (-o) se nn specificato salva nel file di partenza
+          - help (-h)
+07/02/2007
+- FATTO requisiti del progetto libgsl0-1.8-1 (gnu scientific library)
+
+25/01/2007
+- FATTO compilare progetto con g++-3.3
+    - per compilare il progetto con g++-3.3, compilare anche robot con g++-3.3 gcc-3.3
+- far partire il progetto con g++-3.3
+      
+
+19/01/2007
+- FATTO fare HIReadSensorsTimer
+- FATTO gestire meglio _gridPanel in modo che mostri l'output della simulazione di valori con la mocap staccata
+- cercare di generalizzare i timer fatti ad hoc per le varie funzioni 
+- vedere velocità dei motori di human
+- NON SI PUO FARE rendere meno scattoso il modello3d (decimare le forme [NON SI PUO' XKE' NEI PARALLELEPIPEDI E NELLE SFERE NN CI SONO TRIANGOLI])
+
+
+12/01/2007 FATTO
+Vedere il modello del robot....POSSIBILE PROBLEMI:
+            -la conversione da uradiants a gradi
+            - direzioni del virtual robot
+
+09/01/2007 FATTO
+- mettere a posto strane variazioni della spalla...ilprimo axes è passato con valori a caso
+Per il gantt:
+SOFTWARE: - caricare il modello 3d da file di configurazione
+          - redirezionare i valori dei sensori a + attuatori (permettere + modelli 3d)
+          - mettere a punto l'interfaccia grafica
+          - salvare movimenti di mocap e indirizzarli ai joints
+    
+HARDWARE: - completare la struttura di NAIS
+          - mocap:
+            - redere + comoda la mocap:
+                            - mettere listelli di alluminio sugli spessori
+            - mettere a punto la metodologia di calibrazione con le bolle, (vedere se mettere accelerometri)
+            - mettere la dimax nella cintura
+            - colorare il guscio della cintura
+19/12/2006 FATTO
+FATTO Sensors: cambiare sensorsSystem, vector per le direzioni degli attuatori (togliere dir e servoDir da SensorsAttributes)
+HI: vedere come mandare il mocap ai motori, vedere bene la comunicazione con i motori (es: chiusura connessione, mandare pacchetti etc etc)
+Actuators: fare tutto
+FATTO IO: pulire il codice di IOMMD.cpp, servono soolo le funzioni importData(), writeData() e writestring()
+Communication: prendere da gil i nuovi cgMessage, i MVJOINTUWTIME e MVJOINTUWSPEED movimento uniforme
+WXVTKInterface: creare l'oggeto 3d dal linguaggio di script
+3D: rendere la creazione degli oggetti 3d e l'associazione con i motori + omogenea con sensorsSystem
+
+
+15/12/2006 FATTO
+Non funziona HIFrame::OnCommunicationTimer()...nn manda 1 messaggio con molti sensori. In Communication::Main.cpp invece funziona...MISTERO
+
+13/12/2006
+-Descrizione calibrazione dei motori:
+1) trovare il coefficiente di trasformazione proprio di ciascun tipo di motore:
+  - montare sull'asse del motore il goniometro.
+  - disporre il motore in modo che si possa muovere liberamente (e quindi anche il goniometro si muoverà liberamente)
+  - con servoCalibrator, impostare le posizioni assolute e misurare l'angolo si spostamento (in gradi) sul goniometro. Prendere la posizione 0 arbitrariamente e da questa posizione misurare 30-60-90-e 120 gradi. Quindi tenere traccia delle posizioni assolute agli angoli misurati.
+  - in proveServo.xls sottrarre ad ogni posizione assoluta la posizione assoluta presa come posizione di partenza. Quindi dividere la differenza con l'angolo misurato (in mrad) . Facendo ciò si trova il coefficiente di calibrazione del motore.
+
+ 2) trovare la velocità minima in (urad/sec) del motore
+  - con ServoCalibrator impostare posizione minima e massima del motore. Per misuare la velocità minima del motore (in urad/sec) è necessario impostare la velocità del motore ad 1. Per comodità ho impostato la posizione massima del motore alla posizione assoluta corrispondente ai 90 gradi. Con un cronometro misurare il tempo necessario perchè il motore si sposti dalla posizione 0° alla posizione 90°. Quindi dividere lo spostamento in urad per il tempo calcolato.
+
+3) trovare la velocità massima di urad/sec del motore
+ - la velocità massima compare tra le specifiche del motore, a 4.8V. Con buona approssimazione è sufficiente una proporzione per 
+
+4) salvare le info in ServoSettings.h (aggiungere il tipo di motore all'enum) e in ServoSettings.cpp (aggiungere 1 elemento all'array)
+  
+5) ricompilare e installare cortex
+
+6) con servoCalibrator determinare la posizione assouluta minima e massima, in relazione alla struttura sui cui i motori sono montati. Servocalibrator calcola la neutral poisition e il range. I valori vanno messi nel file di configurazione servoDev.cfg
+7) avviare cortex e servoConsole determinare la 0 position (in gradi) e completare la configurazione di servoDev.cfg con la 0 position. Riavviare cortex
+
+18/12/2006
+- Scrivere lo stato di avanzamento dello sviluppo FATTO
+- i motori si muovono troppo lentamente
+
+12/12/2006
+- vedere coefficiente di conversione per i motori HS225BB: 1.3432677 funziona abb bene, 0.97522 funziona male
+- fare descrizione procedura calibrazione motori FATTO
+
+
+11/12/2006
+- testare 1 pò i motori con le nuove impostazione
+- trovare la 0 position dei motori FATTO
+- descrivere la procedura di calibrazione dei motori per la stesura FATTO
+
+6/12/2006
+- installare le wxwidgets2.6.3 con opzione di configure --with-opengl=yes idem per le wxgtk2.6.3
+- Hiframe aggiunto bottone read sensors...gestire gli stati dell'interfaccia FATTO (da testare)
+
+30/11/2006
+- comprare almeno 4(x2) bolle di la max 3-4 cm di lunghezza. Le bolle servono per determinare la posizione di default necessaria per resettare i parametri di calibrazione
+- fare script per sensorssystem
+- cambiare il range del 5004, quando si ruota si arriva a fine corsa
+- provare il cavetto usb-seriale per i motori
+
+27/11/2006
+IDEA: come in gipsy tenere conto della distanza tra il centro di rotazione delle ossa e quello dei potenziometri
+
+16/11/2006
+NOTARE BENISSIMO posizione iniziale: assicurarsi che l'upperarm e lowerarm siano perpendicolari a terra...
+
+10/11/2006
+- fare meglio i makefile FATTO
+- fare modulo actuators che si occupa di attuare i movimenti catturati dai sensori (setto i canali di output: 3d, motori, file etc)
+- fare modulo sensors fatto com actuators possibilit�di settare i canali di input
+
+8/11/2006 FATTO
+- visualizzare gli angoli oltre che i valori del braccio (Modificare HIGrid)
+- problemi grossi con il gomito, il movimento non �lineare, provare a settare il potenziometro a valori minori , + centrali...
+
+13/10/2006 
+- aggiungere a sensorssystem informazioni circa bounding box e averanges
+- fare la funzione che importa il file di configurazione .mmd e lo trasforma in un sensorssystem
+
+22/9/2006 FATTO
+-vedere se far interagire frame3D con HITimer o creare un altro timer dedicato per Frame3D (N.B: se tengo HITimer, gestione + semplice, ma poca modularit� se creo Timer3D + modularità ma la cosa è complicata da gestire: su frame3D dovrei usare 1 timer per la simulazione e 1 timer per l'acquisizione).
+- modificare HIGrid con una wxGrid FATTO
+
+21/9/2006 FATTO
+- progetto aggiornato alle vtk 5.0.1 e alle wxWidgets 2.6.3(.2) e wxVTKRenderWindowInteractor alla versione 1.0
+- per far funzionare le wxWidgets 2.6.3.2 settare pkg-config nella dir in cui si trova gtk+-2.0.pc (i.e./usr/local/lib/pkgconfig/)
+
+15/9/2006 FATTO
+- fare la parte di cattura del movimento HIFrame::OnMoCap() e HITimer::Notify()
+
+14/9/2006
+- commentare IOMCD e IOMMD FATTO
+- vedere meglio updateFrame3D, dare le direzioni corrette
+- provare con + markers	FATTO
+- generare automaticamente file .mcd FATTO
+
+8/9/2006 FATTO
+- rivedere meglio IOMCD.cpp
+- unire IOMCD a HITImer e IOMMD a HIFrame FATTO
+
+6/9/2006 FATTO
+-finire IOMMD.cpp: utilizzare la variabile _body, specifica il pattern delle righe di ciascuna sezione
+
+4/8/2006
+-fare 12/7/2006
+- problemi nel far funzionare il braccio...Tutti valori dei potenziometri sono al massimo, tensione di 2V latente nel circuito.
+	- Possibile Soluzione: vedere se manca la terra da qualche parte
+- modulo 3D: 
+	-in Object3D calibrare il modello 3D in modo tale che la posizione iniziale di ogni DOF sia il valore minimo della calibrazione. (Passare a Object3D SensorsSystem::_sensorsCalibrateMax e SensorsSystem::_sensorsCalibrateMin)
+	-fare calcolo che restituisce l'angolo del DOF del modello dal valore del sensore (TODEGREE())
+- fare documentazione
+- modulo CalibratedReadSensors diventato inutile con la creazione di FilteredReadSensors::getCalibratedValue()
+
+3/8/2006 FATTO
+-CalibrateReadSensor non funziona, non tiene  i valori di calibrazione memorizzati
+30/8/2006
+- Leggere come sono fatti i file MCD in "/mnt/D_NTFS/Documenti/Tesi/Tesi Barbagallo_MoCap" 
+
+
+2/8/2006
+-export PKG_CONFIG_PATH=/usr/lib/pkgconfig ricordasi di esportare qst prima di compilare
+- librerie di sistema utilizzate: gtk1.2 (libgtk1.2-dev.deb e dipendenze), wxwidgets (libwxgtk2.4-dev.deb e dipendenze), vtk 4.4 (libvtk4-dev.deb e dipendenze)
+- segmentation fault quando si chiude l'applicazione
+
+1/8/2006
+-libreria -lXm mancante ->installato pacchetto lesstif
+- libreria -lXpm mancante -> installato pacchetto libgd-xpm-dev
+
+31/7/2006 FATTO
+-ATTENZIONE HI/Thred3D legge in concorrenza con HITimer i valori dei sensori, potrebbe creare dei problemi:
+	SOLUZIONI:
+		-lasciare solo ad HITimer la lettura del sensore e HITimer stesso aggiorna Thread3D e HIFrame
+
+28/7/2006 FATTO
+- connettere Vtk con wxWidgets:
+	- fare classe wx3DThread che estende wxThread e contenga un Canvas3D
+	- fare partire il thread da HIFrame::On3DModel()
+
+12/7/2006
+- Fare modulo di scrittura e lettura dati su file. 
+	- Necessario per salvare (anche online) e leggere offline i dati catturati dal mocap
+	- salvare e leggere calibrazione
+	- salvare e leggere dati sulla struttura dei sensori
+- Fare interfaccia grafica che utilizza anche il modulo di lettura/scrittura dati sul file per:
+	- visualizzare (in 3D) la posizione del robot nello spazio
+	
+
+27/6/2006 FATTO
+- aggiornare l'interfaccia con i valori dei sensori tramite HI/HIThread.h 
+- fare un make che riesca a compilare wxWidgets e le altre librerie
+
+
+20/6/2006 FATTO
+- Capire come si mettono i pannelli su un frame (FATTO)
+- visualizzare valori dei sensori nei pannelli del frame
+- fare interfaccia di calibrazione (FATTO)
+
+
+14/6/2006 
+- Fare modulo di scrittura e lettura dati su file. 
+	- Necessario per salvare (anche online) e leggere offline i dati catturati dal mocap
+	- salvare e leggere calibrazione
+	- salvare e leggere dati sulla struttura dei sensori
+
+- Fare interfaccia grafica che utilizza il anche modulo di lettura/scrittura dati sul file per:
+	- calibrare i sensori FATTO
+	- visualizzare (in 3D) la posizione del robot nello spazio
+	
+8/6/2006 (FATTO)
+- Finire di implementare CalibrateSensors.h e CalibrateSensors.cpp
+- Fare un main adeguato che permetta di calibrare i sensori

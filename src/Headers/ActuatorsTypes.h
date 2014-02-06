@@ -1,0 +1,12 @@
+#ifndef ACTUATORSTYPES_H
+#define ACTUATORSTYPES_H
+
+struct ActuatorType{
+  enum CHANNELS {
+  VIRTUALSTICKJOINTS=0,
+  NAISJOINTS,
+  VIRTUALNAISJOINTS,
+  
+  };
+};
+#endif

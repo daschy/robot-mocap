@@ -1,0 +1,68 @@
+#Makefile Common
+
+CC = g++
+AR    = $(CROSS_COMPILE)ar
+TARGET=prova
+MAIN=main
+
+SRCSUFFIX=.cpp
+
+
+ROBOT_DIR=/home/daschy/tesi/robot/
+SHARED_DIR=$(ROBOT_DIR)/src/sharedCode
+CONFIG_DIR=$(SRC_DIR)/Config
+LIBS_DIR=$(SRC_DIR)/Libs
+
+
+ROBOT_LDFLAGS=-L$(ROBOT_DIR)/lib
+
+SHARED_CPPFLAGS=-I$(ROBOT_DIR)/src/sharedCode -I$(ROBOT_DIR)/include -I$(ROBOT_DIR)/library
+SHARED_LDFLAGS=-L$(ROBOT_DIR)/lib
+
+SERIAL_CPPFLAGS=-I$(ROBOT_DIR)/src/cortex/components/sem
+SERIAL_LDFLAGS=
+
+SENSORS_LDFLAGS=-L$(SRC_DIR)/Sensors
+SENSORS_LDLIBS=-lSensors
+
+3D_LDFLAGS=-L$(SRC_DIR)/3D
+3D_LDLIBS=-l3D
+
+IO_LDFLAGS=-L$(SRC_DIR)/IO
+IO_LDLIBS=-lIO 
+
+ACTUATORS_LDFLAGS=-L$(SRC_DIR)/Actuators
+ACTUATORS_LDLIBS=-lActuators
+
+COMM_LDFLAGS=-L$(SRC_DIR)/Communication
+COMM_LDLIBS=-lComm -lcgMessages
+
+WXVTKINTERFACE_LDFLAGS=-L$(SRC_DIR)/WXVTKInterface
+WXVTKINTERFACE_LDLIBS= -lwxVtkInterface #$(SRC_DIR)/WXVTKInterface/Frame3D.o $(SRC_DIR)/WXVTKInterface/wxVTKRenderWindowInteractor.o 
+
+#GTK_FLAGS=`gtk-config --cflags`
+GTK_FLAGS=`pkg-config --cflags gtk+-2.0`
+
+#WXCONFIG = /usr/bin/wxgtk-2.4-config
+WXCONFIG = $(shell which wx-config)
+
+
+WX_CPPFLAGS = `$(WXCONFIG) --cppflags` $(GTK_FLAGS)
+WX_LDFLAGS  =
+WX_LDLIBS   = `$(WXCONFIG) --libs --gl-libs`
+
+VTK_INCLUDE =/usr/include/vtk-5.0
+#VTK_INCLUDE =/usr/include/vtk
+VTK_CPPFLAGS = -I$(VTK_INCLUDE)
+VTK_LDFLAGS  = -L$(VTK_INCLUDE)
+VTK_LDLIBS   = -lvtkHybrid  # -lvtkRendering
+# -lvtkGraphics -lvtkRendering -lvtkIO -lvtkCommon -lvtkFiltering  -lvtkImaging -lvtkpng -lvtkzlib -lvtkjpeg  
+
+
+APP_CPPFLAGS = -Wall -I. -I$(SRC_DIR) -Wno-deprecated -DDEBUGGING -g -DDEBIAN_BUILDARCH=pentium
+APP_LDFLAGS  = -L/usr/X11R6/lib
+APP_LDLIBS   = 
+
+CPPFLAGS = $(APP_CPPFLAGS)
+LDFLAGS  = $(APP_LDFLAGS)
+LDLIBS   = -lMyConfigParser
